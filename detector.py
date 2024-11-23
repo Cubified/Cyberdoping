@@ -3,6 +3,7 @@ import sys
 import time
 import shutil
 import pickle
+import platform
 import pyopenms
 import subprocess
 import numpy as np
@@ -11,9 +12,8 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 MODEL_FILE = "model.pkl"
-MZML_FILE = "mzML/steroids02.mzML"
+MZML_FILE = "tmp.mzML"
 CLEAN_FILE = "raw/samplea.raw"
-SEARCH_PATH = None
 THRESHOLD = 0.75
 
 model = None
@@ -26,7 +26,7 @@ def load_mzml(file_path):
 
     features = []
     for spec in exp:
-        # if spec.getMSLevel() == 1:  # Consider only MS1 level scans
+        # if spec.getMSLevel() == 1:  # Consider only MS1 level scans (breaks some samples)
         mz_array, intensity_array = spec.get_peaks()
         for mz, intensity in zip(mz_array, intensity_array):
             features.append((mz, intensity))
@@ -46,7 +46,10 @@ def detect_athlete(raw_file):
             model = pickle.load(f)
 
     print(f"Converting {raw_file} to mzML...")
-    subprocess.run(["msconvert.exe", "-f", raw_file, "--outfile", MZML_FILE, "--mzML"])
+    cmd = ["bin/msconvert.exe", raw_file, "--outfile", MZML_FILE, "--mzML"]
+    if not platform.system() == "Windows":
+        cmd.insert(0, "wine")
+    subprocess.run(cmd)
 
     print("Running predictor...")
     sample_features = load_mzml(MZML_FILE)
@@ -63,9 +66,7 @@ def detect_athlete(raw_file):
 
 # Clean raw files that exist at script startup
 def clean_existing_raw():
-    global SEARCH_PATH
-
-    for file in Path(SEARCH_PATH).rglob("*.raw"):
+    for file in Path(sys.argv[1]).rglob("*.raw"):
         detect_athlete(str(file))
 
 # Trigger athlete detector whenever a raw file is created or modified
@@ -75,15 +76,15 @@ class RawFileHandler(FileSystemEventHandler):
             detect_athlete(event.src_path)
 
 if __name__ == "__main__":
-    if SEARCH_PATH == None:
-        print("Error: Search path not specified, exiting.")
+    if len(sys.argv) == 1:
+        print("Usage: detector.py <raw file search path>")
         sys.exit()
 
     clean_existing_raw()
 
     event_handler = RawFileHandler()
     observer = Observer()
-    observer.schedule(event_handler, SEARCH_PATH, recursive=True)
+    observer.schedule(event_handler, sys.argv[1], recursive=True)
     observer.start()
 
     try:
