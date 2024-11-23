@@ -46,9 +46,12 @@ def detect_athlete(raw_file):
             model = pickle.load(f)
 
     print(f"Converting {raw_file} to mzML...")
-    cmd = ["bin/msconvert.exe", raw_file, "--outfile", MZML_FILE, "--mzML"]
-    if not platform.system() == "Windows":
+    cmd = [raw_file, "--outfile", MZML_FILE, "--mzML"]
+    if platform.system() == "Windows":
+        cmd.insert(0, ".\\bin\\msconvert.exe")
+    else:
         cmd.insert(0, "wine")
+        cmd.insert(0, "bin/msconvert.exe")
     subprocess.run(cmd)
 
     print("Running predictor...")

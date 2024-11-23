@@ -1,4 +1,4 @@
-# FreeDope:  Doping Suppression
+# FreeDope:  Doping Suppression via Analysis Software Manipulation
 
 This repository is a proof-of-concept attack on Thermo Fisher's [FreeStyle](https://www.thermofisher.com/us/en/home/technical-resources/technical-reference-library/mass-spectrometry-support-center/liquid-chromatography-mass-spectrometry-software-support/freestyle-software-support/freestyle-software-support-getting-started.html) mass spectrometry analysis software.
 
