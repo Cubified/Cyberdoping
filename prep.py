@@ -10,12 +10,15 @@ def load_mzml(file_path):
     exp = pyopenms.MSExperiment()
     pyopenms.MzMLFile().load(file_path, exp)
 
-    features = []
+    features = [(0, 0)]
     for spec in exp:
         # if spec.getMSLevel() == 1:  # Consider only MS1 level scans
         mz_array, intensity_array = spec.get_peaks()
         for mz, intensity in zip(mz_array, intensity_array):
             features.append((mz, intensity))
+
+    if len(features) == 1:
+        print(f"Warning: File {file_path} has no features, results will be meaningless")
     
     # Simplify by binning the peaks
     features = np.array(features)
