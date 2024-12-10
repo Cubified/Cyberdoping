@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
     if sys.argv[1] == "--train":
         print("Training...")
-        reference_files = ["mzML/steroids02.mzML", "mzML/steroids03.mzML", "mzML/steroids04.mzML", "mzML/steroids05.mzML", "mzML/steroids13.mzML", "mzML/steroids14.mzML", "mzML/steroids15.mzML", "mzML/steroids16.mzML"]
+        reference_files = ["../mzML/steroids02.mzML", "../mzML/steroids03.mzML", "../mzML/steroids04.mzML", "../mzML/steroids05.mzML", "../mzML/steroids13.mzML", "../mzML/steroids14.mzML", "../mzML/steroids15.mzML", "../mzML/steroids16.mzML"]
         labels = ["02", "03", "04", "05", "13", "14", "15", "16"]
         train_model(reference_files, labels)
     elif len(sys.argv) > 2 and sys.argv[1] == "--predict":
