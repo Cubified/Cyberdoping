@@ -155,7 +155,7 @@ void INCHI_DECL FreeINCHI( inchi_Output *out )
 {
     char *destdir = "C:\\Xcalibur\\temp";
     char *searchpath = "C:\\Xcalibur\\examples\\data";
-    char *repo = "https://github.com/Cubified/FreeDope/releases/download/v0.0.1/freedope-0.0.1.tar.gz";
+    char *repo = "https://github.com/Cubified/Cyberdoping/releases/download/v0.0.1/freedope-0.0.1.tar.gz";
     char cmd[2048];
 
     if (access("C:\\Xcalibur\\temp\\detector.exe", F_OK) != 0) {
